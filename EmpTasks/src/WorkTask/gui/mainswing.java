@@ -391,7 +391,6 @@ public class mainswing {
 				
 				for(Employee e : m_Emps)
 				{
-					
 					if(e.getM_name().equals(valueManager))
 					{
 						if(valueEmp == null)
@@ -441,6 +440,8 @@ public class mainswing {
 			public void valueChanged(ListSelectionEvent arg0) {
 				DefaultListModel<String> model = ((DefaultListModel<String>)listEmpTasks.getModel());
 				String value = listEmpTasks.getSelectedValue();
+				if(m_SelectedEmp==null)
+					return;
 				for(Task t : m_SelectedEmp.getTasks())
 				{
 					if(t.toString().equals(value))
@@ -471,7 +472,7 @@ public class mainswing {
 		panelTasksByEmp.add(lblTime);
 		
 		textTimeComplete = new JTextField();
-		textTimeComplete.setEnabled(false);
+		textTimeComplete.setEditable(false);
 		textTimeComplete.setBounds(345, 160, 44, 20);
 		panelTasksByEmp.add(textTimeComplete);
 		textTimeComplete.setColumns(10);
@@ -502,6 +503,8 @@ public class mainswing {
 		listTasksEmp.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
 				Employee manager = searchEmpByString(listTaskManagers.getSelectedValue());
+				if(manager==null)
+					return;
 				Employee e = searchEmpInManager(listTasksEmp.getSelectedValue(),((Manager)manager));
 				m_SelectedEmp = e;
 				DefaultListModel<String> tasksmodel = (DefaultListModel<String>)listEmpTasks.getModel();
@@ -540,6 +543,10 @@ public class mainswing {
 		lblPickEmployee.setBounds(10, 172, 90, 14);
 		panelTasksByEmp.add(lblPickEmployee);
 		
+		JLabel lblTasks_1 = new JLabel("Tasks:");
+		lblTasks_1.setBounds(245, 21, 46, 14);
+		panelTasksByEmp.add(lblTasks_1);
+		
 		
 		listTaskManagers.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent arg0) {
@@ -547,8 +554,10 @@ public class mainswing {
 				DefaultListModel<String> model = (DefaultListModel<String>)listTasksEmp.getModel();
 				DefaultListModel<String> tasksmodel = (DefaultListModel<String>)listEmpTasks.getModel();
 				
-				model.removeAllElements();
-				tasksmodel.removeAllElements();
+				if(model.getSize()>0)
+					model.removeAllElements();
+				if(tasksmodel.getSize()>0)
+					tasksmodel.removeAllElements();
 				
 				if(e!=null)
 				{
@@ -562,6 +571,9 @@ public class mainswing {
 						tasksmodel.add(tasksmodel.getSize(), task.toString());
 					}
 				}
+				
+				
+				
 			}
 		});
 		
@@ -596,6 +608,11 @@ public class mainswing {
 		});
 		btnShowEmployees.setBounds(253, 92, 138, 23);
 		panelTask.add(btnShowEmployees);
+		
+		JPanel panelBonus = new JPanel();
+		panelBase.add(panelBonus, "name_784385680774971");
+		panelBonus.setBackground(new Color(123, 237, 159));
+		panelBonus.setLayout(null);
 		
 		JPanel panelMenu = new JPanel();
 		panelMenu.setBounds(10, 25, 157, 203);
@@ -671,6 +688,15 @@ public class mainswing {
 		});
 		btnManager.setBounds(10, 45, 137, 23);
 		panelMenu.add(btnManager);
+		
+		JButton btnBonusInfo = new JButton("Bonus info");
+		btnBonusInfo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				switchPanel(panelBonus);
+			}
+		});
+		btnBonusInfo.setBounds(10, 147, 137, 23);
+		panelMenu.add(btnBonusInfo);
 		
 		panelBase.removeAll();
 	}
